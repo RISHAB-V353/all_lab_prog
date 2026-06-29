@@ -1,58 +1,82 @@
-#include<stdio.h>
+#include <stdio.h>  //program Swapping of two integer arrays
 
-void input(int arr[], int n);
-void swap(int arr1[], int arr2[], int n);
-void output(int arr1[], int arr2[], int n);
+/* Function Prototypes (Pointer version) */
+void read_array(int n, int *arr);
+void swap_arrays(int n, int *arr1, int *arr2);
+void display_arrays(int n, int *arr1, int *arr2);
 
-int main(){
+int main()
+{
     int n;
-
-    printf("Enter the number of elements in array: ");
+    printf("Enter number of elements: ");
     scanf("%d", &n);
-    if(n<1){
-        printf("Invalid Size!");
+
+    if(n<1)
+    {
+        printf("Invalid array size\n");
         return 0;
     }
-
-    int arr1[n], arr2[n];
     
-    printf("Enter elements in array1: \n");
-    input(arr1, n);
+    int arr1[n], arr2[n];
 
-    printf("Enter elements in array2: \n");
-    input(arr2, n);
+    printf("Enter elements of array 1:\n");
+    read_array(n, arr1);
 
-    swap(arr1, arr2, n);
-
-    output(arr1, arr2, n);
+    printf("Enter elements of array 2:\n");
+    read_array(n, arr2);
+    /* Before swapping */
+    printf("\nBefore swapping:\n");
+    printf("Array 1: \n");
+    for(int i=0; i<n; i++){
+    printf("%d ", arr1[i]);
+    }
+    printf("\n");
+    printf("Array 2: \n");
+    for(int i=0; i<n; i++){
+    printf("%d ", arr2[i]);
+    }
+    
+    swap_arrays(n, arr1, arr2);
+    
+    /* After swapping */
+    printf("\nAfter swapping:\n");
+    display_arrays( n, arr1, arr2);
 
     return 0;
 }
 
-void input(int arr[], int n){
+/* Function to input array elements */
+void read_array(int n, int *arr)
+{
     for(int i=0; i<n; i++){
-        printf("Element %d: ", i+1);
-        scanf("%d", &arr[i]);
-    }
+        printf("Enter element at index %d: ",i);
+        scanf("%d", & arr[i]);
+}
 }
 
-void swap(int arr1[], int arr2[], int n){
-    int temp[n];
+/* Function to swap arrays */
+void swap_arrays(int n, int *arr1, int *arr2)
+{
+    int temp;
     for(int i=0; i<n; i++){
-        temp[i] = arr1[i];
+        temp = arr1[i];
         arr1[i] = arr2[i];
-        arr2[i] = temp[i];
+        arr2[i] = temp;
     }
 }
 
-void output(int arr1[], int arr2[], int n){
-    printf("After swapping....\n");
-    printf("Elements of array1: \n");
-    for(int i=0; i<n; i++){
-        printf("Element %d: %d\n", i+1, arr1[i]);
+/* Function to display arrays */
+void display_arrays(int n, int *arr1, int *arr2)
+{
+    printf("Array 1:\n");
+    for(int i =0; i<n; i++){
+        printf("%d ", arr1[i] );
     }
-    printf("Elements of array2: \n");
-    for(int i=0; i<n; i++){
-        printf("Element %d: %d\n", i+1, arr2[i]);
+    
+
+    printf("\nArray 2:\n");
+    for(int i =0; i<n; i++){
+        printf("%d ", arr2[i] );
     }
+
 }

@@ -1,109 +1,116 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-typedef struct{
-    char name[100], lang[50];
+typedef struct
+{
+    char name[100];
+    char language[50];
     int year;
     float rating;
-}Movie;
+} Movie;
 
-int count_movie(char input[]);
-Movie* allocateMem(int count);
-void readmovies(char filename[], int count, Movie *movies);
-void displaymovies(Movie *movies, int n);
-void sortmovies(Movie *movies, int count);
-void writemovies(Movie *movies, int count, char filename[]);
-void freeMem(Movie **movies);
+/* Function Prototypes */
 
-int main(){
+int countMovies(char filename[]);
+Movie* allocateMemory(int count);
+void readMovies(char filename[], Movie *movies, int count);
+void displayMoviesFromFile(int n, Movie *movies);
+void sortMovies(Movie *movies, int count);
+void freeMemory(Movie **movies);
+
+/* Main Function */
+
+int main()
+{
     char input[] = "IMDb_400_Movies1.csv";
-    char output[] = "sorted_movies.csv";
-
-    int count = count_movie(input);
-    Movie *movies = allocateMem(count);
-    readmovies(input, count, movies);
-
+    char output[] = "output.csv";
+    int count = countMovies(input);
+    Movie *movies = allocateMemory(count);
+    readMovies(input, movies, count);
     int n;
-    printf("Enter number of movies to display: ");
+    printf("Enter how many movie records to display: ");
     scanf("%d", &n);
-    if(n>count){
-        n=count;
+    if(n > count)
+    {
+        n = count;
     }
-
-    displaymovies(movies, n);
-    sortmovies(movies, count);
-    printf("\n");
-    displaymovies(movies, n);
-    writemovies(movies, count, output);
-    freeMem(&movies);
-
+    printf("\nBefore Sorting:\n\n");
+    displayMoviesFromFile(n, movies);
+    sortMovies(movies, count);
+    printf("\nAfter Sorting:\n\n");
+    displayMoviesFromFile(n, movies);
+    printf("\nSorted movie data stored successfully.\n");
+    freeMemory(&movies);
     return 0;
 }
 
-int count_movie(char input[]){
-    FILE *fp = fopen(input, "r");
+/* Function Definitions */
 
-    if(fp == NULL){
-        printf("Errro opening file!");
+int countMovies(char filename[])
+{
+   FILE *fp = fopen(filename, "r");
+  
+    if(fp == NULL)
+    {
+        printf("File cannot be opened\n");
         exit(0);
     }
-    char line[100];
+    char line[300];
     int i=-1;
-
     while(fgets(line, sizeof(line), fp)){
         i++;
     }
-
     fclose(fp);
     return i;
 }
 
-Movie* allocateMem(int count){
-    Movie *movies = (Movie*)malloc(sizeof(Movie)*count);
-
-    if(movies == NULL){
-        printf("Memory allocation failed!");
+Movie* allocateMemory(int count)
+{
+    Movie *movies = (Movie*)malloc(count*sizeof(Movie));
+    if(movies == NULL)
+    {
+        printf("Memory allocation failed\n");
         exit(0);
     }
     return movies;
 }
 
-void readmovies(char filename[], int count, Movie *movies){
+void readMovies(char filename[], Movie *movies, int count)
+{
     FILE *fp = fopen(filename, "r");
-    
-    if(fp == NULL){
-        printf("Error opening file!");
+    if(fp == NULL)
+    {
+        printf("File cannot be opened\n");
         exit(0);
     }
-
+    
     char line[300];
     fgets(line, sizeof(line), fp);
-
-    for(int i=0; i<count; i++){
-        if(fgets(line, sizeof(line), fp)){
-            sscanf(line, "%99[^,],%49[^,],%d,%f", movies[i].name,
-                                              movies[i].lang,
-                                              &movies[i].year,
-                                              &movies[i].rating);
-        }
+    
+    int i=0;
+    while(fgets(line, sizeof(line), fp)){
+        sscanf(line, "%99[^,], %49[^,], %d, %f", movies[i].name, movies[i].language, &movies[i].year, &movies[i].rating);
+        i++;
     }
-
     fclose(fp);
-
 }
 
-void displaymovies(Movie *movies, int n){
-    for(int i=0; i<n; i++){
-        printf("%s %s %d %f\n", movies[i].name,
-        movies[i].lang, movies[i].year, movies[i].rating);
+void displayMoviesFromFile(int n, Movie *movies)
+{
+    
+    for(int i=0; i<n; i++)
+    {
+        printf("%s | %s | %d | %.1f\n", movies[i].name, movies[i].language, movies[i].year, movies[i].rating );
     }
+    
 }
 
-void sortmovies(Movie *movies, int count){
+void sortMovies(Movie *movies, int count)
+{
     Movie temp;
     for(int i=0; i<count-1; i++){
-        for (int j = 0; j < count-i-1; j++){
+        for(int j=0; j<count-i-1; j++){
             if(strcmp(movies[j].name, movies[j+1].name)>0){
                 temp = movies[j];
                 movies[j] = movies[j+1];
@@ -113,22 +120,8 @@ void sortmovies(Movie *movies, int count){
     }
 }
 
-void writemovies(Movie *movies, int count, char filename[]){
-    FILE *fp = fopen(filename, "w");
-    if(fp == NULL){
-        printf("Error Creating csv file");
-        exit(0);
-    }
-    fprintf(fp, "Movie Name,Language,Year,Rating\n");
-
-    for(int i=0; i<count; i++){
-        fprintf(fp, "%s,%s,%d,%f\n", movies[i].name, movies[i].lang, movies[i].year, movies[i].rating);
-    }
-
-    fclose(fp);
-}
-
-void freeMem(Movie **movies){
+void freeMemory(Movie **movies)
+{
     free(*movies);
     *movies = NULL;
 }

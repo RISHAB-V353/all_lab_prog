@@ -1,48 +1,56 @@
-// program Maximum value in an array
-#include<stdio.h>
+#include <stdio.h>  //program 1
 
-void input(int arr[], int n);
-int maxxer(int arr[], int n);
-void output(int arr[], int n);
+/* Function Prototypes */
+void input(int n, int arr[n]);
+int find_max_index(int n, int arr[n]);
+void output(int arr[], int index);
 
-int main(){
-    int n;
-
+int main()
+{
+    int n, index;
     printf("Enter number of elements: ");
-    if(scanf("%d", &n) != 1 || n < 1){
-        printf("Invalid size!");
+
+    if(scanf("%d", &n) != 1 ||n<1)
+    {
+        printf("Invalid array size\n");
         return 0;
     }
-
+    
     int arr[n];
-
-    input(arr, n);
-    int mindex = maxxer(arr, n);
-    output(arr, mindex);
+    
+    input(n, arr);
+    index = find_max_index(n, arr);
+    output(arr, index);
 
     return 0;
-
 }
 
-void input(int arr[], int n){
-    printf("Enter elements in the array: \n");
+/* Function to read array elements */
+void input(int n, int arr[n])
+{
     for(int i=0; i<n; i++){
-        printf("Element %d: ", i+1);
+        printf("Enter element at index %d: ", i);
         scanf("%d", &arr[i]);
     }
 }
 
-int maxxer(int arr[], int n){
-    int largest = arr[0], index=0;
-    for(int i=0; i<n; i++){
+/* Function to find index of maximum element */
+int find_max_index(int n, int arr[n])
+{
+    int index = 0, largest = arr[0];
+    for(int i=1; i<n; i++){
         if(largest < arr[i]){
             largest = arr[i];
             index = i;
         }
     }
     return index;
+    
 }
 
-void output(int arr[], int n){
-    printf("The largest values in the array is %d at index %d", arr[n], n+1);
+/* Function to display result */
+void output(int arr[], int index)
+{
+    printf("Maximum value = %d\n",arr[index] );
+    printf("Index of maximum value = %d\n", index);
 }
